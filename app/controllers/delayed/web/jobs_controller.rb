@@ -1,6 +1,13 @@
 module Delayed
   module Web
     class JobsController < Delayed::Web::ApplicationController
+      def show
+        if job == nil
+          flash[:notice] = t(:notice, scope: 'delayed/web.flashes.jobs.executed')
+          redirect_to jobs_path
+        end
+      end
+
       def queue
         if job.can_queue?
           job.queue!
