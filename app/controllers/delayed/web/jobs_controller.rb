@@ -35,16 +35,16 @@ module Delayed
       end
       helper_method :job
 
-      def jobs(state=nil)
+      def jobs(state=nil, page=nil, per=10)
         case state.to_s.downcase
         when "queued"
-          @jobs ||= Delayed::Web::Job.all
+          @jobs ||= Delayed::Job.page(page).per(per)
         when "executing"
-          @jobs ||= Delayed::Web::Job.where(:locked_at => { "$ne" => nil }, :locked_by => { "$ne" => nil } )
+          @jobs ||= Delayed::Job.where(:locked_at => { "$ne" => nil }, :locked_by => { "$ne" => nil } ).page(page).per(per)
         when "failed"
-          @jobs ||= Delayed::Web::Job.where(:failed => { "$ne" => nil })
+          @jobs ||= Delayed::Job.where(:failed => { "$ne" => nil }).page(page).per(per)
         else
-          @jobs ||= Delayed::Web::Job.all
+          @jobs ||= Delayed::Job.page(page).per(per)
         end
       end
       helper_method :jobs

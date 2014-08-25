@@ -6,21 +6,23 @@ module Delayed
       end
       
       def self.where *args
-        jobs = Delayed::Job.where(*args)
-        Enumerator.new do |enumerator|
-          jobs.each do |job|
-            enumerator.yield decorate(job)
-          end
-        end
+        Delayed::Job.send(:include, Kaminari::MongoidExtension::Document)
+        jobs = Delayed::Job.page(1).per(5).where(*args).entries
+        jobs
+        #Enumerator.new do |enumerator|
+        #  jobs.each do |job|
+        #    enumerator.yield decorate(job)
+        #  end
+        #end
       end
 
       def self.all
         jobs = Delayed::Job.desc('id')
-        Enumerator.new do |enumerator|
-          jobs.each do |job|
-            enumerator.yield decorate(job)
-          end
-        end
+        #Enumerator.new do |enumerator|
+        #  jobs.each do |job|
+        #    enumerator.yield decorate(job)
+        #  end
+        #end
       end
 
       def self.decorate job

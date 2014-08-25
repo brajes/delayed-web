@@ -24,8 +24,10 @@
     </tr>
   </thead>
   <tbody>
-    <% if jobs(params[:state]).any? %>
-      <% jobs(params[:state]).each do |job| %>
+    <% @jobs = jobs(params[:state], params[:page]) %>
+    <% if @jobs.any? %>
+      <% @jobs.each do |job| %>
+        <% job = Delayed::Web::Job::Mongoid.decorate(job) %>
         <tr>
           <td><%= link_to "##{job.id}", job_path(job) %></td>
           <td>
@@ -54,5 +56,6 @@
         </td>
       </tr>
     <% end %>
+    <%= paginate @jobs %>
   </tbody>
 </table>

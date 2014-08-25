@@ -1,4 +1,5 @@
 require 'forwardable'
+require 'kaminari'
 
 module Delayed
   module Web
