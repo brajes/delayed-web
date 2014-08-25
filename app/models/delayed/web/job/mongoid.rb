@@ -6,7 +6,6 @@ module Delayed
       end
       
       def self.where *args
-        Delayed::Job.send(:include, Kaminari::MongoidExtension::Document)
         jobs = Delayed::Job.page(1).per(5).where(*args).entries
         jobs
         #Enumerator.new do |enumerator|

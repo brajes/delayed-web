@@ -20,11 +20,24 @@ module Delayed
       # @return [void]
       def self.backend= new_backend
         @backend = "Delayed::Web::Job::#{new_backend.classify}".constantize
+        
+        if @backend == Delayed::Web::Job::Mongoid
+          Delayed::Job.send(:include, Kaminari::MongoidExtension::Document)
+        end
       end
 
       def self.backend
         @backend
       end
+      
+      def self.main_app_path
+        @main_app_path
+      end
+      
+      def self.main_app_path= new_main_app_path
+        @main_app_path = new_main_app_path
+      end
+      
     end
   end
 end
