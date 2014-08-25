@@ -35,8 +35,17 @@ module Delayed
       end
       helper_method :job
 
-      def jobs
-        @jobs ||= Delayed::Web::Job.all
+      def jobs(state=nil)
+        case state.to_s.downcase
+        when "queued"
+          @jobs ||= Delayed::Web::Job.all
+        when "executing"
+          @jobs ||= Delayed::Web::Job.where(:locked_at => { "$ne" => nil }, :locked_by => { "$ne" => nil } )
+        when "failed"
+          @jobs ||= Delayed::Web::Job.where(:failed => { "$ne" => nil })
+        else
+          @jobs ||= Delayed::Web::Job.all
+        end
       end
       helper_method :jobs
     end

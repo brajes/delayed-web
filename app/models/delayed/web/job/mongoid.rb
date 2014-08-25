@@ -4,9 +4,18 @@ module Delayed
       def self.find *args
         decorate Delayed::Job.find(*args)
       end
+      
+      def self.where *args
+        jobs = Delayed::Job.where(*args)
+        Enumerator.new do |enumerator|
+          jobs.each do |job|
+            enumerator.yield decorate(job)
+          end
+        end
+      end
 
       def self.all
-        jobs = Delayed::Job.desc('id').limit(100)
+        jobs = Delayed::Job.desc('id')
         Enumerator.new do |enumerator|
           jobs.each do |job|
             enumerator.yield decorate(job)

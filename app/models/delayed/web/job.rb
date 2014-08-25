@@ -6,6 +6,7 @@ module Delayed
       extend SingleForwardable
 
       def_delegator :backend, :all
+      def_delegator :backend, :where
       def_delegator :backend, :find
 
       # Set the backend you're using for Delayed::Job.

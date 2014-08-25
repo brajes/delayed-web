@@ -4,6 +4,13 @@
   <h1><%= title %></h1>
 </div>
 
+<ul class="nav nav-tabs">
+  <li><%= link_to "Home", "/" %></li>
+  <li><%= link_to "Queued", jobs_path(:state => :queued) %></li>
+  <li><%= link_to "Executing", jobs_path(:state => :executing) %></li>
+  <li><%= link_to "Failed", jobs_path(:state => :failed) %></li>
+</ul>
+
 <table class="table table-bordered">
   <thead>
     <tr>
@@ -17,8 +24,8 @@
     </tr>
   </thead>
   <tbody>
-    <% if jobs.any? %>
-      <% jobs.each do |job| %>
+    <% if jobs(params[:state]).any? %>
+      <% jobs(params[:state]).each do |job| %>
         <tr>
           <td><%= link_to "##{job.id}", job_path(job) %></td>
           <td>
